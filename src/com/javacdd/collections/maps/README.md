@@ -207,3 +207,22 @@ Correct alternatives:
 - Distributed caches (Redis, Hazelcast)
 
 ---
+## Real-World HashMap Applications
+**URL Shortener Service (URLShortenerService.java)**
+What it does:
+
+- Converts long URLs into short, shareable links
+
+- Bidirectional mapping (short ↔ long URL)
+
+- Collision handling and duplicate prevention
+
+- Usage statistics tracking
+```
+URLShortenerService service = new URLShortenerService();
+String shortUrl = service.shortenURL("https://example.com/very/long/url");
+// Returns: "https://short.ly/aB3xY9z"
+
+String original = service.expandURL(shortUrl);
+// Returns: "https://example.com/very/long/url"
+```
