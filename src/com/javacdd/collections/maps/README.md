@@ -364,6 +364,7 @@ null
 Why:
 
 **HashMap uses the key’s hashCode() at the time of insertion to determine the bucket where the entry is stored.**
+
 If the key’s internal state changes later, its hashCode() may change as well, breaking the original bucket mapping.
 As a result, the entry still exists inside the map but becomes unreachable, because lookups search a different bucket.
 ---
