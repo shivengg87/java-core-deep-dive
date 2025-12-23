@@ -300,10 +300,9 @@ System.out.println(map.size());
 ```
 2
 ```
-Why
-
-Even though equals() is overridden, hashCode() is not.
-As a result, logically equal objects can produce different hash values and end up in different buckets.
+Why :
+**Even though equals() is overridden, hashCode() is not.**
+- As a result, logically equal objects can produce different hash values and end up in different buckets.
 Since HashMap only calls equals() after keys land in the same bucket, these entries are treated as different keys.
 ---
 ```
@@ -331,10 +330,10 @@ System.out.println(map.size());
 ```
 1
 ```
-Why:
+Why :
 
 **HashMap first uses hashCode() to decide which bucket a key should go into.**
-If another key lands in the same bucket, HashMap then calls equals().
+- If another key lands in the same bucket, HashMap then calls equals().
 When equals() returns true, HashMap treats both keys as the same logical key and overwrites the existing value instead of adding a new entry.
 ---
 ```
@@ -364,8 +363,7 @@ null
 Why:
 
 **HashMap uses the key’s hashCode() at the time of insertion to determine the bucket where the entry is stored.**
-
-If the key’s internal state changes later, its hashCode() may change as well, breaking the original bucket mapping.
+- If the key’s internal state changes later, its hashCode() may change as well, breaking the original bucket mapping.
 As a result, the entry still exists inside the map but becomes unreachable, because lookups search a different bucket.
 ---
 ```
