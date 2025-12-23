@@ -244,6 +244,7 @@ Why
 - Keys must be unique
 - put(1, "B") overwrites value for key 1
 - HashMap does not allow duplicate keys
+---
 ```
 # Order of Insertion
 Map<Integer, String> map = new HashMap<>();
@@ -260,3 +261,162 @@ Unpredictable order
 Why
 - HashMap does NOT maintain insertion order
 - Order depends on hashing & bucket placement
+---
+```
+# Null key behavior
+Map<String, Integer> map = new HashMap<>();
+map.put(null, 10);
+map.put(null, 20);
+map.put("A", 30);
+
+System.out.println(map);
+```
+✅ Output
+```
+{null=20, A=30}
+```
+Why
+- HashMap allows only one null key
+- Second put(null, 20) overwrites first value
+---
+```
+# equals() without hashCode() 
+class Key {
+    int id;
+    Key(int id) { this.id = id; }
+
+    public boolean equals(Object o) {
+        return ((Key)o).id == this.id;
+    }
+}
+
+Map<Key, String> map = new HashMap<>();
+map.put(new Key(1), "A");
+map.put(new Key(1), "B");
+
+System.out.println(map.size());
+```
+✅ Output
+```
+2
+```
+Why
+
+Even though equals() is overridden, hashCode() is not.
+As a result, logically equal objects can produce different hash values and end up in different buckets.
+Since HashMap only calls equals() after keys land in the same bucket, these entries are treated as different keys.
+---
+```
+# equals + hashCode both overridden
+class Key {
+    int id;
+    Key(int id) { this.id = id; }
+
+    public boolean equals(Object o) {
+        return ((Key)o).id == this.id;
+    }
+
+    public int hashCode() {
+        return id;
+    }
+}
+
+Map<Key, String> map = new HashMap<>();
+map.put(new Key(1), "A");
+map.put(new Key(1), "B");
+
+System.out.println(map.size());
+```
+✅ Output
+```
+1
+```
+Why:
+
+**HashMap first uses hashCode() to decide which bucket a key should go into.**
+If another key lands in the same bucket, HashMap then calls equals().
+When equals() returns true, HashMap treats both keys as the same logical key and overwrites the existing value instead of adding a new entry.
+---
+```
+# Mutable Key 
+class Key {
+    int id;
+    Key(int id) { this.id = id; }
+
+    public int hashCode() { return id; }
+    public boolean equals(Object o) {
+        return ((Key)o).id == this.id;
+    }
+}
+
+Key k = new Key(1);
+Map<Key, String> map = new HashMap<>();
+map.put(k, "A");
+
+k.id = 2;
+
+System.out.println(map.get(k));
+```
+✅ Output
+```
+null
+```
+Why:
+
+**HashMap uses the key’s hashCode() at the time of insertion to determine the bucket where the entry is stored.**
+If the key’s internal state changes later, its hashCode() may change as well, breaking the original bucket mapping.
+As a result, the entry still exists inside the map but becomes unreachable, because lookups search a different bucket.
+---
+```
+# containsKey vs containsValue
+Map<Integer, String> map = new HashMap<>();
+map.put(1, "A");
+map.put(2, "B");
+
+System.out.println(map.containsKey(1));
+System.out.println(map.containsValue("B"));
+System.out.println(map.containsKey("A"));
+```
+✅ Output
+```
+true
+true
+false
+```
+```
+Map<Integer, Integer> map = new HashMap<>();
+
+for (int i = 0; i < 3; i++) {
+    map.put(i, i + 1);
+}
+
+System.out.println(map.get(2));
+```
+✅ Output
+```
+3
+```
+Why :
+
+In each iteration, the loop index i is used as the key, and i + 1 is used as the value.
+When i becomes 2, the entry (2 → 3) is inserted into the map.
+Therefore, map.get(2) returns 3.
+
+```
+# Iteration modification
+Map<Integer, String> map = new HashMap<>();
+map.put(1, "A");
+map.put(2, "B");
+
+for (Integer key : map.keySet()) {
+    map.put(3, "C");
+}
+```
+✅ Output
+```
+ConcurrentModificationException
+```
+Why :
+
+**HashMap does not allow you to change its size while you are looping over it.**
+ConcurrentModificationException occurs because HashMap iterators are fail-fast and do not allow structural changes while iterating. When a loop starts, the iterator expects the map’s structure (number of entries) to remain unchanged. If a key is added or removed during iteration using operations like put() or remove(), HashMap immediately detects this change and throws the exception to prevent inconsistent traversal
