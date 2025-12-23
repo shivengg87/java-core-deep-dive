@@ -226,3 +226,37 @@ String shortUrl = service.shortenURL("https://example.com/very/long/url");
 String original = service.expandURL(shortUrl);
 // Returns: "https://example.com/very/long/url"
 ```
+## HashMap Output-Based Puzzle
+```
+# Basic put & overwrite
+Map<Integer, String> map = new HashMap<>();
+map.put(1, "A");
+map.put(1, "B");
+map.put(2, "C");
+
+System.out.println(map);
+```
+✅ Output
+```
+{1=B, 2=C}
+```
+Why
+- Keys must be unique
+- put(1, "B") overwrites value for key 1
+- HashMap does not allow duplicate keys
+```
+# Order of Insertion
+Map<Integer, String> map = new HashMap<>();
+map.put(3, "C");
+map.put(1, "A");
+map.put(2, "B");
+
+System.out.println(map);   
+```
+✅ Output
+```
+Unpredictable order
+```
+Why
+- HashMap does NOT maintain insertion order
+- Order depends on hashing & bucket placement
