@@ -208,7 +208,7 @@ Correct alternatives:
 
 ---
 ## Real-World HashMap Applications
-**URL Shortener Service (URLShortenerService.java)**
+**URL Shortener Service ([URLShortenerService.java](https://github.com/shivengg87/java-core-deep-dive/blob/main/src/com/javacdd/collections/maps/URLShortenerService.java))**
 What it does:
 
 - Converts long URLs into short, shareable links
