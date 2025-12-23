@@ -347,7 +347,6 @@ class Key {
         return ((Key)o).id == this.id;
     }
 }
-
 Key k = new Key(1);
 Map<Key, String> map = new HashMap<>();
 map.put(k, "A");
@@ -419,3 +418,29 @@ Why :
 
 **HashMap does not allow you to change its size while you are looping over it.**
 ConcurrentModificationException occurs because HashMap iterators are fail-fast and do not allow structural changes while iterating. When a loop starts, the iterator expects the map’s structure (number of entries) to remain unchanged. If a key is added or removed during iteration using operations like put() or remove(), HashMap immediately detects this change and throws the exception to prevent inconsistent traversal
+
+```
+class Key {
+    int id;
+    Key(int id) { this.id = id; }
+
+    public int hashCode() { return 1; }
+    public boolean equals(Object o) {
+        return ((Key)o).id == this.id;
+    }
+}
+
+Map<Key, String> map = new HashMap<>();
+map.put(new Key(1), "A");
+map.put(new Key(2), "B");
+
+System.out.println(map.size());
+```
+✅ Output    
+```
+2
+```
+Why :
+Both keys return the same hashCode(), so HashMap places them in the same bucket. However, when HashMap checks for key equality within that bucket, equals() returns false because the id values are different. Since the keys are not logically equal, HashMap treats them as distinct keys and stores both entries in the same bucket using collision handling (linked list or tree). As a result, the map contains two entries and the output is 2.
+
+Same hashCode() → same bucket → equals() is false → collision handled → both keys stored.
