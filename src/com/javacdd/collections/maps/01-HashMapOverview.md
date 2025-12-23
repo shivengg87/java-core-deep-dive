@@ -1,5 +1,3 @@
-# HashMap in Java — Complete Theoretical & Internal View
-
 ## 1. Why HashMap Exists (The Core Idea)
 
 HashMap exists to solve one problem efficiently:
